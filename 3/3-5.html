@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>div과 span 예제</title>
+    <!-- margin: 객체 사이의 거리. 예: div 사이의 거리 -->
+    <!-- padding: 객체 내부 요소 사이의 거리. 예: div내부 border과 글자 사이의 거리 -->
+    <style>
+        .container{
+            border: 1px solid #333;
+            padding: 20px;
+            margin: 10px;
+        }
+        .highlight{
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>공지사항</h2>
+        <p>
+            이번주 금요일에 <span class="highlight">정기 점검</span>이 있을 예정입니다. <br>
+            점검 시간 동안 서비스 이용이 제한될 수 있습니다.
+        </p>
+    </div>
+</body>
+</html>
