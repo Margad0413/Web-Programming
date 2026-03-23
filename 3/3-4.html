@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>세로 div 예제</title>
+    <!-- margin: 객체 사이의 거리. 예: div 사이의 거리 -->
+    <!-- padding: 객체 내부 요소 사이의 거리. 예: div내부 border과 글자 사이의 거리 -->
+    <style>
+        .vertical div {
+            border: 1px solid black;
+            padding: 10px; 
+            margin: 5px 0;
+        }
+        .horizontal{
+            display: flex;
+            
+        }
+        .horizontal div{
+            flex: 1;
+            border: 1px solid black;
+            padding: 10px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="vertical">
+        <div>헤더 영역</div>
+        <div>본문 영역
+            <div class="horizontal">
+                <div>헤더 영역</div>
+                <div>본문 영역</div>
+                <div>푸터 영역</div>
+            </div>
+        </div>
+        <div>푸터 영역</div>
+    </div>
+</body>
+</html>
