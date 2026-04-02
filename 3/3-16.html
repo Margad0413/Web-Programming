@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- CGI: Common Gateway Interface 
+     웹 서버에서 동적인 페이지를 보여 주기 위해 임의의 프로그램을 실행할 수 있도록 하는 기술 중 하나. -->
+</head>
+<body>
+    <!-- 데이터 보애는 방식:
+     get: 암호화되지 않음. 
+     post: 암호화되어 있음. -->
+    <form action="server.php" method="get">
+        아이디 <input type="text" id="id" name="id"><br>
+        비밀번호 <input type="password" id="pw" name="pw"><br>
+        <!-- <br><input type="button" value="button"> -->
+        <br><input type="reset" value="reset">
+        <br><input type="submit" value="submit">
+    </form>
+</body>
+</html>
