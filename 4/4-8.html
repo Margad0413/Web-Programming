@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>속성 선택자 사용하기</title>
+    <!-- 속성 선택자. 클래스나 id의 속성까지 선택자를 통해 style을 줄수 있다. -->
+    <style>
+        a{text-decoration-line: none;}
+        a[download] {color:green;}
+        a[target="_blank"] {color:red;}
+    </style>
+</head>
+<body>
+    <p><a href="https://mcdonalds.co.kr"> 맥도날드 홈페이지</a></p>
+    <p><a href="https://google.com" target="_blank">구글 홈페이지(새창)</a></p>
+    <p><a href="4-8.html" download>4-8.html 다운로드</a></p>
+</body>
+</html>

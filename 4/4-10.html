@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>가상 클래스 선택자</title>
+    <!-- p:hover 이런거. p: hover 이렇게 공백이 있으면 안됨
+     포커스가 어디있나 확인하는법: TAB키 누르면 확인가능. -->
+    <style>
+        p:hover {background-color: yellow;}
+        li::first-letter{color: red;}
+        li:nth-child(2n){color: green;}
+        li:last-child{color: blue;}
+    </style>
+</head>
+<body>
+    <h2>바나나</h2>
+    <p><img src="banana.jpg" width="120"></p>
+    <ul>
+        <li>노란색의 아열대 과일</li>
+        <li>지방이 없어 체중 조절에 좋음</li>
+        <li>식이섬유가 풍부해 조식 대용으로 적당</li>
+</body>
+</html>
