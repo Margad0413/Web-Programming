@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인라인 블록 만들기</title>
+    <style>
+        span, div{
+            display: inline-block;
+            width: 150px;
+            height: 60px;
+            background-color: #feb;
+            border: 1px solid #715;
+            margin: auto;
+        }
+    </style>
+</head>
+<body style="font-size: 20px; font-weight: bold;">
+    span 태그(인라인-블록):<br>
+    <p><span>span</span> <span>크기 지정 가능</span></p>
+    div 태그(인라인-블록):<br>
+    <p><div>div</div> <div>한줄에 표시</div></p>
+    인라인-블록은 문자 속성: <br>
+    <p><div style="background-color: #8dc;
+    width: 300px; text-align: center;">
+        <span>text-align: center</span>
+    </div></p>
+</body>
+</html>
