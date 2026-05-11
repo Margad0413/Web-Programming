@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>체크박스에서 값 읽기</title>
+</head>
+<body>
+    <input type="checkbox" id="myCheckbox"> 다음 단계 진행 확인! <br>
+    <input type="button" value="process" onclick="getCheckBox()"><hr>
+    <p id="result"></p>
+    <script>
+        function getCheckBox(){
+            if (document.getElementById("myCheckbox").checked == true)
+                document.getElementById("result").innerHTML = "성공";
+            else
+                document.getElementById("result").innerHTML = "실패";
+        }
+    </script>
+</body>
+</html>

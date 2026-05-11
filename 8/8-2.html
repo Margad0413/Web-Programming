@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>요소 여러 개에 접근하기</title>
+</head>
+<body>
+    <p>a</p>
+    <p class="elm">b</p>
+    <p class="elm">c</p><hr>
+    <script>
+        const elms = document.getElementsByClassName("elm");
+        for (let i = 0; i <elms.length; i++)
+            document.write(`ByClassName: elms[${i}] = ${elms[i].innerHTML}<br>`);
+        document.write("<hr>")
+        const tags = document.getElementsByTagName("p");
+        for(let i =0; i<tags.length; i++)
+            document.write(`ByTagName P: tags[${i}] = ${tags[i].innerHTML}<br>`)    
+    </script>
+</body>
+</html>

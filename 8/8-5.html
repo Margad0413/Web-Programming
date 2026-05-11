@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>textarea에서 값 읽기</title>
+</head>
+<body>
+    <textarea id="input" rows="5" cols="20"></textarea><br>
+    <input type="button" value="Get Text" onclick="getTextArea()"><hr>
+    <p id="result"></p>
+    <script>
+        function getTextArea(){
+            const st = document.getElementById("input").value;
+            document.getElementById("result").innerHTML = st;
+        }
+    </script>
+</body>
+</html>
