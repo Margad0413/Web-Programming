@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이벤트의 전파 방향 확인하기</title>
+</head>
+<body>
+    <div id = "parent">부모 태그
+        <div id ="child">자식 태그</div>
+    </div>
+    <script>
+        document.getElementById("parent").addEventListener("click",function(){
+            alert("부모 요소에 클릭 이벤트 발생");
+        });
+        document.getElementById("child").addEventListener("click",function(e){
+            alert("자식 요소에 클릭 이벤트 발생");
+            e.stopPropagation();
+        });
+    </script>
+</body>
+</html>
