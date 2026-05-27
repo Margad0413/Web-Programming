@@ -1,0 +1,431 @@
+/* ----------------------------------------------------
+   1. 기본 초기화 및 변수 선언 (기본 다크모드 색상 컨셉)
+---------------------------------------------------- */
+:root {
+    --bg-color: #1b2838;       /* 스팀 느낌의 메인 딥 네이비 배경 */
+    --card-bg: #2a475e;        /* 세부 섹션 및 카드 배경 */
+    --text-color: #c7d5e0;     /* 기본 가시성 텍스트 색상 */
+    --point-color: #66c0f4;    /* 스팀 블루 포인트 컬러 */
+    --border-color: #3b6484;   /* 경계선 색상 */
+    --sun-color: #ff6b6b;      /* 일요일 표시 색상 */
+    --header-bg: #171a21;
+}
+
+/* 2주차 추가: 라이트 모드 변수 정의 */
+html.light-mode,
+body.light-mode {
+    --bg-color: #f4f6f9;       /* 밝은 그레이 배경 */
+    --card-bg: #ffffff;        /* 흰색 카드 배경 */
+    --text-color: #2c3e50;     /* 어두운 텍스트 색상 */
+    --point-color: #0074d9;    /* 선명한 블루 포인트 컬러 */
+    --border-color: #d1d8e0;   /* 밝은 경계선 색상 */
+    --sun-color: #e74c3c;      /* 라이트모드 일요일 */
+    --header-bg: #2c3e50;      /* 어두운 헤더 유지하여 대비감 확보 */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.5;
+    /* 2주차 기술 계획: 다크모드 전환 시 부드러운 애니메이션 */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ----------------------------------------------------
+   2. 공통 시맨틱 레이아웃 (헤더, 푸터, 컨테이너)
+---------------------------------------------------- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: calc(100vh - 140px);
+}
+
+header {
+    background-color: var(--header-bg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    border-bottom: 5px solid var(--point-color);
+    transition: background-color 0.3s ease;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: 1px;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+nav ul li a:hover, nav ul li a.active {
+    background-color: var(--point-color);
+    color: #fff;
+    font-weight: bold;
+}
+
+.theme-toggle button {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 8px 14px;
+    cursor: pointer;
+    border-radius: 20px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle button:hover {
+    border-color: var(--point-color);
+}
+
+footer {
+    background-color: #171a21;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* ----------------------------------------------------
+   3. index.html 전용 레이아웃 (30 : 70 구조 및 달력)
+---------------------------------------------------- */
+.main-layout {
+    display: flex;
+    gap: 30px;
+}
+
+.profile-widget {
+    flex: 3;
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    height: fit-content;
+    transition: background-color 0.3s ease;
+}
+
+.profile-widget h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.profile-img-box {
+    width: 120px;
+    height: 120px;
+    background-color: #171a21;
+    color: #fff;
+    margin: 0 auto 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid var(--point-color);
+    font-size: 14px;
+    border-radius: 0;
+}
+
+.profile-info p {
+    margin-bottom: 10px;
+}
+
+.profile-info ul {
+    list-style: none;
+    padding-left: 10px;
+}
+
+.profile-info li {
+    color: var(--point-color);
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.calendar-section {
+    flex: 7;
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: background-color 0.3s ease;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.calendar-nav button {
+    background-color: var(--header-bg);
+    border: 1px solid var(--border-color);
+    color: white;
+    padding: 6px 12px;
+    cursor: pointer;
+    margin-left: 5px;
+    border-radius: 4px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    background-color: var(--border-color);
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.day-header {
+    background-color: var(--header-bg);
+    color: #fff;
+    text-align: center;
+    padding: 8px 0;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.calendar-cell {
+    background-color: var(--bg-color);
+    min-height: 95px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    transition: background-color 0.3s ease;
+}
+
+.calendar-cell.dummy {
+    opacity: 0.3;
+}
+
+.day-num {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.sun {
+    color: var(--sun-color);
+}
+
+/* 동적으로 추가될 일정 스티커 스타일 */
+.game-tag {
+    background-color: var(--point-color);
+    color: #fff;
+    font-size: 11px;
+    padding: 3px 6px;
+    border-radius: 3px;
+    margin-top: 3px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* ----------------------------------------------------
+   4. recommend.html 전용 레이아웃 (검색 & 슬롯 구조)
+---------------------------------------------------- */
+.recommend-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.search-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-form input {
+    flex: 1;
+    padding: 12px;
+    background-color: var(--header-bg);
+    border: 1px solid var(--border-color);
+    color: white;
+    border-radius: 4px;
+}
+
+html.light-mode .search-form input,
+body.light-mode .search-form input {
+    color: #000;
+    background-color: #fff;
+}
+
+.search-form button, .roll-btn, .submit-btn {
+    background-color: var(--point-color);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: opacity 0.2s;
+}
+
+.search-form button:hover, .roll-btn:hover, .submit-btn:hover {
+    opacity: 0.9;
+}
+
+.search-results, .slot-machine {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.game-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    width: calc(33.333% - 14px);
+    padding: 15px;
+    display: flex;
+    gap: 15px;
+    transition: background-color 0.3s ease;
+}
+
+.game-cover {
+    width: 90px;
+    height: 120px;
+    background-color: var(--header-bg);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 11px;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.game-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+}
+
+.meta-score {
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+html.light-mode .meta-score,
+body.light-mode .meta-score {
+    color: #27ae60;
+}
+
+/* 오타 수정된 버튼 클래스 */
+.add-sched-btn {
+    background: none;
+    border: 1px solid var(--point-color);
+    color: var(--point-color);
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 12px;
+    border-radius: 4px;
+    align-self: flex-start;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.add-sched-btn:hover {
+    background-color: var(--point-color);
+    color: white;
+}
+
+.slot-section h3 {
+    margin-bottom: 20px;
+    border-left: 4px solid var(--point-color);
+    padding-left: 10px;
+}
+
+.roll-action {
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* ----------------------------------------------------
+   5. schedule_form.html 전용 레이아웃 (웹 폼 양식)
+---------------------------------------------------- */
+.form-section {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 700px;
+    margin: 0 auto;
+    transition: background-color 0.3s ease;
+}
+
+.form-section h2 {
+    margin-bottom: 20px;
+    font-size: 22px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.form-group select, .form-group input, .form-group textarea {
+    background-color: var(--header-bg);
+    border: 1px solid var(--border-color);
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+html.light-mode .form-group select,
+html.light-mode .form-group input,
+html.light-mode .form-group textarea,
+body.light-mode .form-group select,
+body.light-mode .form-group input,
+body.light-mode .form-group textarea {
+    background-color: #fff;
+    color: #000;
+}
+
+.inline-group .date-inputs, .time-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-action {
+    text-align: right;
+}

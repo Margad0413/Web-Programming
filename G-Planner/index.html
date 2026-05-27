@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G-Planner - 메인 및 스케줄러</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js"></script>
+    <script>applyThemeImmediately();</script>
+</head>
+<body>
+    <header>
+        <div class="logo">G-Planner</div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">메인★</a></li>
+                <li><a href="recommend.html">게임 추천</a></li>
+                <li><a href="schedule_form.html">일정 등록</a></li>
+            </ul>
+        </nav>
+        <div class="theme-toggle">
+            <button id="darkModeBtn">🌙 다크모드 토글</button>
+        </div>
+    </header>
+
+    <main class="container main-layout">
+        <aside class="profile-widget">
+            <h2>[ 스팀 프로필 ]</h2>
+            <div class="profile-img-box">프로필 이미지</div>
+            <div class="profile-info">
+                <p><strong>닉네임:</strong> 마르가드</p>
+                <p><strong>보유게임:</strong> 142개</p>
+                <p><strong>주 장르 선호도:</strong></p>
+                <ul>
+                    <li>#시뮬레이션 (40%)</li>
+                    <li>#RPG (35%)</li>
+                </ul>
+            </div>
+        </aside>
+
+        <section class="calendar-section">
+            <div class="calendar-header">
+                <h3 id="calendarTitle">2026년 5월</h3>
+                <div class="calendar-nav">
+                    <button id="prevMonthBtn">&lt;</button>
+                    <button id="nextMonthBtn">&gt;</button>
+                </div>
+            </div>
+            
+           <div class="calendar-grid" id="calendarGrid">
+                <div class="day-header sun">Sun</div>
+                <div class="day-header">Mon</div>
+                <div class="day-header">Tue</div>
+                <div class="day-header">Wed</div>
+                <div class="day-header">Thu</div>
+             <div class="day-header">Fri</div>
+             <div class="day-header">Sat</div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 G-Planner. 컴퓨터공학과 기말 프로젝트</p>
+    </footer>
+</body>
+</html>
