@@ -1,40 +1,27 @@
-/**
- * G-Planner - 통합 메인 자바스크립트 (1주차 ~ 3주차 고도화 완료)
- */
-
-// [글로벌 상태 관리] 현재 달력 화면에 표시할 연도와 월 (기본값: 2026년 5월)
-let currentYear = 2026; 
-let currentMonth = 4;   // JavaScript Date 객체에서 5월은 index 4입니다 (0부터 시작)
-
-// [가상 데이터 셋업] IGDB API 연동 전 기능 검증을 위한 샘플 게임 배열
-const SAMPLE_GAMES = [
-    { id: "stardew", title: "스타듀밸리", score: 89 },
-    { id: "witcher", title: "위쳐 3: 와일드 헌트", score: 93 },
-    { id: "rimworld", title: "림월드", score: 87 },
-    { id: "dontstarve", title: "Don't Starve", score: 86 },
-    { id: "cyberpunk", title: "사이버펑크 2077", score: 86 }
-];
+// 현재 화면에 표시 중인 연도와 월을 관리하는 변수 (월은 0부터 시작)
+let currentYear = 2026;
+let currentMonth = 5;
 
 document.addEventListener("DOMContentLoaded", () => {
-    initTheme();          // 테마 상태 로드 및 초기화
-    setupThemeToggle();   // 테마 토글 버튼 이벤트 바인딩
+    initTheme();          
+    setupThemeToggle();   
 
-    // 현재 열린 페이지의 파일명 분석 후 기능 분기 실행
-    const path = window.location.pathname;
-    const page = path.substring(path.lastIndexOf("/") + 1);
-
+    // 현재 접속한 페이지 이름에 따라 필요한 초기화 함수 실행
+    const page = window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1);
     if (page === "index.html" || page === "") {
-        initCalendar(); // 달력 동적 생성 및 월 이동 활성화
+        initCalendar();
     } else if (page === "recommend.html") {
-        initRecommendPage(); // 게임 검색 및 추천 슬롯 제어
+        initRecommendPage();
     } else if (page === "schedule_form.html") {
-        initFormPage(); // 스케줄 등록 폼 제어
+        initFormPage();
     }
 });
 
 /* ==========================================================================
-   [테마 제어] 다크모드 / 라이트모드 토글 및 LocalStorage 상시 유지 관리
+   [테마 기능] 라이트모드 및 다크모드 상호작용
    ========================================================================== */
+
+// 로컬 스토리지에 저장된 테마 상태를 불러와서 브라우저에 적용하는 함수
 function initTheme() {
     const savedTheme = localStorage.getItem("gplanner-theme") || "dark";
     if (savedTheme === "light") {
@@ -46,103 +33,91 @@ function initTheme() {
     }
 }
 
+// 테마 토글 버튼에 클릭 이벤트를 바인딩하고 상태를 저장하는 함수
 function setupThemeToggle() {
     const toggleBtn = document.getElementById("darkModeBtn");
     if (!toggleBtn) return;
-
     toggleBtn.addEventListener("click", () => {
         const isLight = document.body.classList.toggle("light-mode");
-        if (isLight) {
-            localStorage.setItem("gplanner-theme", "light");
-            updateThemeButtonText("☀️ 라이트모드");
-        } else {
-            localStorage.setItem("gplanner-theme", "dark");
-            updateThemeButtonText("🌙 다크모드");
-        }
+        localStorage.setItem("gplanner-theme", isLight ? "light" : "dark");
+        updateThemeButtonText(isLight ? "☀️ 라이트모드" : "🌙 다크모드");
     });
 }
 
+// 테마 토글 버튼 안의 텍스트 레이블을 변경하는 함수
 function updateThemeButtonText(text) {
     const toggleBtn = document.getElementById("darkModeBtn");
     if (toggleBtn) toggleBtn.innerText = text;
 }
 
 /* ==========================================================================
-   [스토리지 유틸] LocalStorage 데이터 입출력 함수
+   [데이터 스토리지] 로컬 스토리지 입출력 및 날짜 처리 유틸
    ========================================================================== */
+
+// 로컬 스토리지에서 등록된 전체 일정 배열을 파싱해서 가져오는 함수
 function getSchedulesFromStorage() {
     return JSON.parse(localStorage.getItem("gplanner-schedules")) || [];
 }
 
+// 전달받은 일정 배열을 JSON 문자열로 변환하여 로컬 스토리지에 세이브하는 함수
 function saveScheduleToStorage(schedules) {
     localStorage.setItem("gplanner-schedules", JSON.stringify(schedules));
 }
 
-// 날짜 비교 시 시/분/초 오차를 제거하기 위한 시간 초기화 함수
+// 정확한 날짜 비교를 위해 시간 데이터를 00:00:00으로 초기화하는 함수
 function resetTime(dateObj) {
     return new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
 }
 
-
 /* ==========================================================================
-   [메인 페이지] 달력 동적 생성 및 앞뒤 월 이동 제어 엔진 (index.html)
+   [캘린더 메인] 메인 달력 생성 및 이전/다음 달 네비게이션 제어
    ========================================================================== */
+
+// 달력의 월 이동 버튼 핸들러를 등록하고 초기 달력을 렌더링하는 함수
 function initCalendar() {
     const prevBtn = document.getElementById("prevMonthBtn");
     const nextBtn = document.getElementById("nextMonthBtn");
-
     if (!prevBtn || !nextBtn) return;
 
-    // 초기 달력 렌더링 호출
     renderCalendar();
 
-    // 이전 달 이동 버튼 클릭 이벤트
     prevBtn.addEventListener("click", () => {
         currentMonth--;
-        if (currentMonth < 0) {
-            currentMonth = 11;
-            currentYear--;
-        }
+        if (currentMonth < 0) { currentMonth = 11; currentYear--; }
         renderCalendar();
     });
 
-    // 다음 달 이동 버튼 클릭 이벤트
     nextBtn.addEventListener("click", () => {
         currentMonth++;
-        if (currentMonth > 11) {
-            currentMonth = 0;
-            currentYear++;
-        }
+        if (currentMonth > 11) { currentMonth = 0; currentYear++; }
         renderCalendar();
     });
 }
 
+// 연/월 계산 및 일정 스토리지 매핑을 통해 화면에 달력 격자를 그려주는 함수
 function renderCalendar() {
     const calendarTitle = document.getElementById("calendarTitle");
     const calendarGrid = document.getElementById("calendarGrid");
     if (!calendarGrid) return;
 
-    // 1. 헤더 연/월 타이틀 화면 갱신
     calendarTitle.innerText = `${currentYear}년 ${currentMonth + 1}월`;
 
-    // 2. 기존에 동적 생성되었던 날짜 셀(.calendar-cell)만 깔끔하게 제거 (요일 헤더는 유지)
     const existingCells = calendarGrid.querySelectorAll(".calendar-cell");
     existingCells.forEach(cell => cell.remove());
 
-    // 3. 이번 달의 첫 번째 날 요일 인덱스 및 이번 달의 총 일수(마지막 날짜) 계산
-    const firstDayIndex = new Date(currentYear, currentMonth, 1).getDay(); // 0(일) ~ 6(토)
-    const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();  // 이번 달의 마지막 날짜 (30 또는 31)
+    const firstDayIndex = new Date(currentYear, currentMonth, 1).getDay();
+    const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-    // 4. Grid 시작 지점의 공백 칸(Dummy 셀) 채우기
+    // 시작 요일 전까지의 공백을 채우기 위한 이전 달 더미 셀 생성 루프
     for (let i = 0; i < firstDayIndex; i++) {
         const dummyCell = document.createElement("div");
         dummyCell.className = "calendar-cell dummy";
         calendarGrid.appendChild(dummyCell);
     }
 
-    // 5. 이번 달 날짜 셀 생성 및 일정 데이터 매칭 바인딩
     const schedules = getSchedulesFromStorage();
 
+    // 1일부터 말일까지 일치하는 일정을 조회하며 날짜 노드를 바인딩하는 루프
     for (let date = 1; date <= lastDate; date++) {
         const cell = document.createElement("div");
         cell.className = "calendar-cell";
@@ -151,25 +126,43 @@ function renderCalendar() {
         dayNumSpan.className = "day-num";
         dayNumSpan.innerText = date;
 
-        // 일요일 요일인 경우 빨간색 지정을 위한 클래스 분기 추가
-        const currentDayOfWeek = new Date(currentYear, currentMonth, date).getDay();
-        if (currentDayOfWeek === 0) {
+        if (new Date(currentYear, currentMonth, date).getDay() === 0) {
             dayNumSpan.classList.add("sun");
         }
-
         cell.appendChild(dayNumSpan);
 
-        // 6. 스토리지 내 일정 탐색: 현재 생성 중인 날짜가 스케줄 기간 내에 포함되는지 검증
         schedules.forEach(item => {
             const itemStartDate = new Date(item.startDate);
             const itemEndDate = new Date(item.endDate);
             const currentCellDate = new Date(currentYear, currentMonth, date);
 
-            // 유순한 날짜 객체 비교를 통해 범위 내 포함 시 동적으로 스티커 생성 및 추가
             if (currentCellDate >= resetTime(itemStartDate) && currentCellDate <= resetTime(itemEndDate)) {
                 const tagNode = document.createElement("div");
                 tagNode.className = "game-tag";
-                tagNode.innerText = `🎮 ${item.gameTitle}`;
+                tagNode.setAttribute("data-schedule-id", item.id);
+                tagNode.style.cursor = "pointer";
+
+                const titleSpan = document.createElement("span");
+                titleSpan.innerText = `🎮 ${item.gameTitle}`;
+                tagNode.appendChild(titleSpan);
+
+                const delBtn = document.createElement("button");
+                delBtn.className = "delete-tag-btn";
+                delBtn.innerText = "✕";
+                delBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    if (confirm(`[${item.gameTitle}] 스케줄 일정을 완전 삭제하시겠습니까?`)) {
+                        deleteSchedule(item.id);
+                    }
+                });
+
+                tagNode.addEventListener("click", (e) => {
+                    if (e.target !== delBtn && !e.target.closest(".delete-tag-btn")) {
+                        showScheduleDetail(item.id);
+                    }
+                });
+
+                tagNode.appendChild(delBtn);
                 cell.appendChild(tagNode);
             }
         });
@@ -178,101 +171,248 @@ function renderCalendar() {
     }
 }
 
+// 고유 ID 식별자를 조회하여 로컬 스토리지에서 특정 스케줄을 제거하는 함수
+function deleteSchedule(id) {
+    let lists = getSchedulesFromStorage();
+    lists = lists.filter(item => item.id !== id);
+    saveScheduleToStorage(lists);
+    cancelScheduleDetail(); 
+    renderCalendar(); 
+}
 
 /* ==========================================================================
-   [추천 페이지] 일정 추가 및 슬롯 회전 액션 제어 (recommend.html)
+   [상세 정보 패널] 선택한 일정 조회 및 실시간 편집 양식 기능
    ========================================================================== */
+
+// 달력에서 선택한 게임의 메모, 기간, 목표 시간을 좌측 패널 폼에 바인딩하는 함수
+function showScheduleDetail(scheduleId) {
+    const schedules = getSchedulesFromStorage();
+    const schedule = schedules.find(s => s.id === scheduleId);
+    if (!schedule) return;
+    
+    const panel = document.getElementById("scheduleDetailPanel");
+    const startDateObj = new Date(schedule.startDate);
+    const endDateObj = new Date(schedule.endDate);
+    const daysCount = Math.ceil((endDateObj - startDateObj) / (1000 * 60 * 60 * 24)) + 1;
+    
+    panel.innerHTML = `
+        <div>
+            <h3 style="margin-bottom: 15px; color: var(--point-color);">🎮 ${schedule.gameTitle}</h3>
+            <div class="schedule-detail-form">
+                <div class="form-group">
+                    <label>📅 기간:</label>
+                    <p style="font-size: 13px; color: var(--text-color); margin: 5px 0;">${schedule.startDate} ~ ${schedule.endDate} <span style="color: var(--border-color);">(${daysCount}일)</span></p>
+                </div>
+                <div class="form-group">
+                    <label for="detail-targetTime">⏱️ 목표 플레이 타임:</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="number" id="detail-targetTime" value="${schedule.targetTime}" min="1" style="flex: 1;">
+                        <span style="font-size: 12px;">시간</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="detail-memo">📝 메모:</label>
+                    <textarea id="detail-memo" rows="4">${schedule.memo || ""}</textarea>
+                </div>
+                <div class="detail-buttons">
+                    <button class="detail-btn detail-save-btn" onclick="saveScheduleDetail(${scheduleId})">💾 저장</button>
+                    <button class="detail-btn detail-delete-btn" onclick="deleteAndCloseDetail(${scheduleId})">🗑️ 삭제</button>
+                    <button class="detail-btn detail-cancel-btn" onclick="cancelScheduleDetail()">✕ 닫기</button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// 상세 정보 패널 내 인풋 폼에서 수정된 타임과 메모를 스토리지에 업데이트하는 함수
+function saveScheduleDetail(scheduleId) {
+    const schedules = getSchedulesFromStorage();
+    const schedule = schedules.find(s => s.id === scheduleId);
+    if (!schedule) return;
+    
+    const targetTime = document.getElementById("detail-targetTime").value;
+    const memo = document.getElementById("detail-memo").value;
+    
+    if (!targetTime || targetTime <= 0) {
+        alert("목표 플레이 타임을 1시간 이상 입력해주세요.");
+        return;
+    }
+    
+    schedule.targetTime = parseInt(targetTime);
+    schedule.memo = memo;
+    
+    saveScheduleToStorage(schedules);
+    alert("✅ 스케줄이 수정되었습니다.");
+    showScheduleDetail(scheduleId);
+}
+
+// 패널 내부에서 일정 파기 시 컨펌창을 거쳐 즉각 데이터를 제거하는 함수
+function deleteAndCloseDetail(scheduleId) {
+    const schedules = getSchedulesFromStorage();
+    const schedule = schedules.find(s => s.id === scheduleId);
+    const gameTitle = schedule ? schedule.gameTitle : "스케줄";
+    
+    if (confirm(`[${gameTitle}] 스케줄을 삭제하시겠습니까?`)) {
+        deleteSchedule(scheduleId);
+        cancelScheduleDetail();
+    }
+}
+
+// 열려 있던 편집 상세 패널창을 닫고 플레이스홀더 기본 문구로 환원시키는 함수
+function cancelScheduleDetail() {
+    const panel = document.getElementById("scheduleDetailPanel");
+    panel.innerHTML = `<p style="text-align: center; color: var(--border-color); padding: 20px; font-size: 13px;">캘린더에서 게임을 선택하면<br>상세 정보가 표시됩니다</p>`;
+}
+
+/* ==========================================================================
+   [추천 및 검색] IGDB API 데이터 패치 연동 및 슬롯 제어
+   ========================================================================== */
+
+// 검색 폼 이벤트 등록 및 추천 목록 이동 브릿지 세션을 관리하는 초기화 함수
 function initRecommendPage() {
-    // "일정에 추가" 버튼 클릭 시 처리 (이벤트 위임 패턴 적용)
+    const searchForm = document.getElementById("searchForm");
+    const searchInput = document.getElementById("searchInput");
+    const searchResults = document.getElementById("searchResults");
+    const rollBtn = document.getElementById("rollBtn");
+
+    runSlotMachine();
+
+    // 목록 리스트 내 카드 클릭 시 세션 스토리지를 경유해 폼 페이지로 타겟을 래핑 연동하는 위임 함수
     document.body.addEventListener("click", (e) => {
         if (e.target && e.target.classList.contains("add-sched-btn")) {
             const card = e.target.closest(".game-card");
             const title = card.querySelector("h4").innerText.replace("타이틀: ", "").trim();
-            
-            // 데이터 공유용 브라우저 세션 스토리지에 임시 보관 후 양식 페이지로 래핑 전환
             sessionStorage.setItem("selected-game-title", title);
-            alert(`[${title}] 일정을 추가합니다. 플레이 등록 화면으로 전환합니다.`);
+            alert(`[${title}] 스케줄을 추가합니다. 플레이 등록 화면으로 전환합니다.`);
             window.location.href = "schedule_form.html";
         }
     });
 
-    // 룰렛(ROLL) 추천 다시 돌리기 이벤트 제어
-    const rollBtn = document.querySelector(".roll-btn");
-    if (rollBtn) {
-        rollBtn.addEventListener("click", () => {
-            alert("🎰 딩-동-댕! 스팀 라이브러리 분석 기반 맞춤형 슬롯 추천 목록을 갱신합니다.");
-            window.location.reload(); // 3주차 단계에서는 데이터를 섞어 재렌더링하는 코드로 대체됩니다.
+    if (searchForm) {
+        searchForm.addEventListener("submit", async (e) => { 
+            e.preventDefault();
+            const keyword = searchInput.value.trim();
+            if (!keyword) return;
+
+            searchResults.innerHTML = `<p style="padding:20px;">IGDB에서 게임 검색 중...</p>`;
+            const matchingGames = await searchGamesFromIGDB(keyword);
+            
+            searchResults.innerHTML = ""; 
+            if (!matchingGames || matchingGames.length === 0) {
+                searchResults.innerHTML = `<p style="padding:20px;">검색 결과가 존재하지 않습니다.</p>`;
+                return;
+            }
+
+            matchingGames.forEach(game => {
+                searchResults.appendChild(createGameCardNode(game));
+            });
         });
+    }
+
+    if (rollBtn) {
+        rollBtn.addEventListener("click", () => runSlotMachine());
     }
 }
 
+// 특정 타겟 장르 기반 고평가 게임을 비동기로 패치해서 추천 슬롯 컨테이너에 배치하는 함수
+async function runSlotMachine() {
+    const slotContainer = document.getElementById("slotMachineContainer");
+    if (!slotContainer) return;
+
+    slotContainer.innerHTML = `<p style="padding:20px;">추천 슬롯 분석 중...</p>`;
+    const selectedSlots = await getRecommendedGamesByGenre("Simulator");
+
+    slotContainer.innerHTML = "";
+    if (!selectedSlots || selectedSlots.length === 0) {
+        slotContainer.innerHTML = `<p style="padding:20px;">추천 데이터를 불러오지 못했습니다.</p>`;
+        return;
+    }
+
+    selectedSlots.forEach(game => {
+        slotContainer.appendChild(createGameCardNode(game));
+    });
+}
+
+// 받아온 실제 IGDB JSON 데이터 형식의 오브젝트를 HTML 게임 카드로 컴파일하는 팩토리 함수
+function createGameCardNode(game) {
+    const card = document.createElement("div");
+    card.className = "game-card";
+    
+    const coverUrl = game.cover && game.cover.url 
+        ? `https:${game.cover.url}` 
+        : "https://via.placeholder.com/80x110?text=No+Image";
+        
+    const score = game.aggregated_rating ? Math.round(game.aggregated_rating) : "N/A";
+
+    card.innerHTML = `
+        <div class="game-cover"><img src="${coverUrl}" alt="cover" style="width:100%; height:100%; object-fit:cover; border-radius:4px;"></div>
+        <div class="game-details">
+            <h4>${game.name}</h4>
+            <p class="meta-score">메타스코어: ${score}</p>
+            <button class="add-sched-btn">[일정에 추가]</button>
+        </div>
+    `;
+    return card;
+}
 
 /* ==========================================================================
-   [등록 페이지] 폼 검증 및 가상 Submit 비동기 처리 제어 (schedule_form.html)
+   [등록 폼] 인풋 양식 입력값 검증 및 가상 폼 전송 핸들링
    ========================================================================== */
-function initFormPage() {
-    const form = document.querySelector(".schedule-web-form");
-    const gameSelect = document.getElementById("gameSelect");
 
+// 이전 추천 페이지에서 인계한 세션 스케줄 값을 파싱해서 셀렉트 박스에 매핑하는 초기화 함수
+function initFormPage() {
+    const form = document.getElementById("scheduleForm");
+    const gameSelect = document.getElementById("gameSelect");
     if (!form) return;
 
-    // 추천 페이지에서 [일정에 추가]를 클릭하여 넘어온 연동 데이터가 있는지 검사
     const preSelectedGame = sessionStorage.getItem("selected-game-title");
     if (preSelectedGame) {
-        let isMatched = false;
-        
-        // 기존 셀렉트박스 옵션에 존재하는 이름인지 확인
+        let matched = false;
         for (let i = 0; i < gameSelect.options.length; i++) {
             if (gameSelect.options[i].text === preSelectedGame) {
                 gameSelect.selectedIndex = i;
-                isMatched = true;
+                matched = true;
                 break;
             }
         }
-        
-        // 만약 기존 선택지에 없는 새로운 추천 게임이라면 옵션을 동적으로 추가해줌
-        if (!isMatched) {
-            const newOption = document.createElement("option");
-            newOption.value = "custom";
-            newOption.text = preSelectedGame;
-            gameSelect.appendChild(newOption);
-            gameSelect.value = "custom";
+        if (!matched) {
+            const opt = document.createElement("option");
+            opt.value = preSelectedGame;
+            opt.text = preSelectedGame;
+            gameSelect.appendChild(opt);
+            gameSelect.value = preSelectedGame;
         }
-        
-        // 매핑 처리 완료 후 사용한 세션 데이터 삭제 (휘발성)
         sessionStorage.removeItem("selected-game-title");
     }
 
-    // 폼 제출(Submit) 이벤트 핸들러 바인딩
+    // 신규 수집된 플레이 기간 및 인풋 데이터 세트를 구조화하여 영구 세이브하는 서브밋 함수
     form.addEventListener("submit", (e) => {
-        e.preventDefault(); // 백엔드 부재로 인한 새로고침 현상 전면 차단 (논블로킹 제어)
+        e.preventDefault();
 
-        const dateInputs = form.querySelectorAll("input[type='date']");
-        const targetTimeInput = document.getElementById("targetTime");
-        const memoTextarea = document.getElementById("memo");
+        const startDate = document.getElementById("startDate").value;
+        const endDate = document.getElementById("endDate").value;
+        const targetTime = document.getElementById("targetTime").value;
+        const memo = document.getElementById("memo").value;
 
-        // 입력값 객체 배열 캡슐화 구조 설계
-        const newSchedule = {
-            id: Date.now(), // 고유 스케줄 키 구분을 위한 타임스탬프 ID 생성
-            gameTitle: gameSelect.options[gameSelect.selectedIndex].text,
-            startDate: dateInputs[0].value,
-            endDate: dateInputs[1].value,
-            targetTime: targetTimeInput.value,
-            memo: memoTextarea.value
-        };
-
-        // 기초 유효성 데이터 검증 필터링
-        if (!newSchedule.startDate || !newSchedule.endDate) {
-            alert("시작 날짜와 종료 날짜를 정확하게 선택해 주세요.");
+        if (new Date(startDate) > new Date(endDate)) {
+            alert("종료 날짜는 시작 날짜보다 빠를 수 없습니다.");
             return;
         }
 
-        // 스토리지 배열에 축적 세이브
+        const scheduleItem = {
+            id: Date.now(), 
+            gameTitle: gameSelect.value,
+            startDate,
+            endDate,
+            targetTime,
+            memo
+        };
+
         const currentLists = getSchedulesFromStorage();
-        currentLists.push(newSchedule);
+        currentLists.push(scheduleItem);
         saveScheduleToStorage(currentLists);
 
-        alert(`🎯 [${newSchedule.gameTitle}] 스케줄이 등록되었습니다. 메인 달력으로 이동합니다!`);
-        window.location.href = "index.html"; // 등록 완료 후 메인 달력 페이지로 리다이렉트
+        alert(`🎯 [${scheduleItem.gameTitle}] 스케줄 저장이 완료되었습니다.`);
+        window.location.href = "index.html";
     });
 }

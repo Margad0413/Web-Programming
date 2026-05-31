@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>G-Planner - 게임 추천</title>
     <link rel="stylesheet" href="style.css">
-    <script src="main.js"></script>
-    <script>applyThemeImmediately();</script>
 </head>
 <body>
     <header>
@@ -25,63 +23,21 @@
 
     <main class="container recommend-layout">
         <section class="search-section">
-            <form class="search-form" onsubmit="return false;">
-                <input type="search" placeholder="게임 타이틀이나 키워드를 입력하세요...">
+            <form class="search-form" id="searchForm">
+                <input type="search" id="searchInput" placeholder="게임 타이틀이나 키워드를 입력하세요...">
                 <button type="submit">검색</button>
             </form>
             
-            <div class="search-results">
-                <div class="game-card">
-                    <div class="game-cover">게임 커버 이미지</div>
-                    <div class="game-details">
-                        <h4>타이틀: Don't Starve</h4>
-                        <p class="meta-score">메타스코어: 86</p>
-                        <button class="add-sched-btn">[일정에 추가]</button>
-                    </div>
-                </div>
-                <div class="game-card">
-                    <div class="game-cover">게임 커버 이미지</div>
-                    <div class="game-details">
-                        <h4>타이틀: Don't Starve Together</h4>
-                        <p class="meta-score">메타스코어: 91</p>
-                        <button class="add-sched-btn">[일정에 추가]</button>
-                    </div>
-                </div>
-            </div>
+            <div class="search-results" id="searchResults"></div>
         </section>
 
         <section class="slot-section">
             <h3>🎰 내 라이브러리 기반 맞춤 추천 슬롯</h3>
             
-            <div class="slot-machine">
-                <div class="game-card">
-                    <div class="game-cover">게임 커버 이미지</div>
-                    <div class="game-details">
-                        <h4>타이틀: 위쳐 3</h4>
-                        <p class="meta-score">메타스코어: 93</p>
-                        <button class="add-sched-btn">[일정에 추가]</button>
-                    </div>
-                </div>
-                <div class="game-card">
-                    <div class="game-cover">게임 커버 이미지</div>
-                    <div class="game-details">
-                        <h4>타이틀: 스타듀밸리</h4>
-                        <p class="meta-score">메타스코어: 89</p>
-                        <button class="add-sched-btn">[일정에 추가]</button>
-                    </div>
-                </div>
-                <div class="game-card">
-                    <div class="game-cover">게임 커버 이미지</div>
-                    <div class="game-details">
-                        <h4>타이틀: 림월드</h4>
-                        <p class="meta-score">메타스코어: 87</p>
-                        <button class="add-sched-btn">[일정에 추가]</button>
-                    </div>
-                </div>
-            </div>
+            <div class="slot-machine" id="slotMachineContainer"></div>
             
             <div class="roll-action">
-                <button class="roll-btn">🎲 다른 게임 추천 받기 (ROLL)</button>
+                <button class="roll-btn" id="rollBtn">🎲 다른 게임 추천 받기 (ROLL)</button>
             </div>
         </section>
     </main>
@@ -89,5 +45,7 @@
     <footer>
         <p>&copy; 2026 G-Planner. 컴퓨터공학과 기말 프로젝트</p>
     </footer>
+    <script src="igdb_api.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>

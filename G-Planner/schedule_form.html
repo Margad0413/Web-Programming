@@ -6,7 +6,6 @@
     <title>G-Planner - 플레이 일정 등록</title>
     <link rel="stylesheet" href="style.css">
     <script src="main.js"></script>
-    <script>applyThemeImmediately();</script>
 </head>
 <body>
     <header>
@@ -27,36 +26,38 @@
         <section class="form-section">
             <h2>새로운 플레이 일정 등록</h2>
             
-            <form class="schedule-web-form" onsubmit="return false;">
+            <form class="schedule-web-form" id="scheduleForm">
                 <div class="form-group">
                     <label for="gameSelect">선택된 게임:</label>
-                    <select id="gameSelect">
-                        <option value="stardew">스타듀밸리</option>
-                        <option value="witcher">위쳐 3</option>
-                        <option value="rimworld">림월드</option>
+                    <select id="gameSelect" required>
+                        <option value="">-- 추천 게임 혹은 직접 선택 --</option>
+                        <option value="스타듀밸리">스타듀밸리</option>
+                        <option value="위쳐 3">위쳐 3</option>
+                        <option value="림월드">림월드</option>
+                        <option value="Don't Starve">Don't Starve</option>
                     </select>
                 </div>
 
                 <div class="form-group inline-group">
                     <label>목표 플레이 기간:</label>
                     <div class="date-inputs">
-                        <input type="date" value="2026-05-28">
+                        <input type="date" id="startDate" required>
                         <span>~</span>
-                        <input type="date" value="2026-06-28">
+                        <input type="date" id="endDate" required>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="targetTime">목표 플레이 타임:</label>
                     <div class="time-input-wrapper">
-                        <input type="number" id="targetTime" value="40" min="1">
+                        <input type="number" id="targetTime" min="1" placeholder="40" required>
                         <span>시간</span>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="memo">메모:</label>
-                    <textarea id="memo" rows="5" placeholder="플레이 계획이나 메모를 입력하세요.">엔딩 볼 때까지 하루에 1시간씩 꼭하기!</textarea>
+                    <textarea id="memo" rows="5" placeholder="플레이 계획이나 메모를 입력하세요."></textarea>
                 </div>
 
                 <div class="form-action">

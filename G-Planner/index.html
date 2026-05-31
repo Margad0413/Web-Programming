@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <!-- https://cors-anywhere.herokuapp.com/corsdemo -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>G-Planner - 메인 및 스케줄러</title>
     <link rel="stylesheet" href="style.css">
     <script src="main.js"></script>
-    <script>applyThemeImmediately();</script>
 </head>
 <body>
     <header>
@@ -24,19 +24,25 @@
     </header>
 
     <main class="container main-layout">
-        <aside class="profile-widget">
-            <h2>[ 스팀 프로필 ]</h2>
-            <div class="profile-img-box">프로필 이미지</div>
-            <div class="profile-info">
-                <p><strong>닉네임:</strong> 마르가드</p>
-                <p><strong>보유게임:</strong> 142개</p>
-                <p><strong>주 장르 선호도:</strong></p>
-                <ul>
-                    <li>#시뮬레이션 (40%)</li>
-                    <li>#RPG (35%)</li>
-                </ul>
+        <div class="left-panel">
+            <aside class="profile-widget">
+                <h2>[ 스팀 프로필 ]</h2>
+                <div class="profile-img-box">프로필 이미지</div>
+                <div class="profile-info">
+                    <p><strong>닉네임:</strong> 마르가드</p>
+                    <p><strong>보유게임:</strong> 142개</p>
+                    <p><strong>주 장르 선호도:</strong></p>
+                    <ul>
+                        <li>#시뮬레이션 (40%)</li>
+                        <li>#RPG (35%)</li>
+                    </ul>
+                </div>
+            </aside>
+
+            <div class="schedule-detail-panel" id="scheduleDetailPanel">
+                <p style="text-align: center; color: var(--border-color); padding: 20px;">캘린더에서 게임을 선택하면<br>상세 정보가 표시됩니다</p>
             </div>
-        </aside>
+        </div>
 
         <section class="calendar-section">
             <div class="calendar-header">
@@ -47,15 +53,14 @@
                 </div>
             </div>
             
-           <div class="calendar-grid" id="calendarGrid">
+            <div class="calendar-grid" id="calendarGrid">
                 <div class="day-header sun">Sun</div>
                 <div class="day-header">Mon</div>
                 <div class="day-header">Tue</div>
                 <div class="day-header">Wed</div>
                 <div class="day-header">Thu</div>
-             <div class="day-header">Fri</div>
-             <div class="day-header">Sat</div>
-
+                <div class="day-header">Fri</div>
+                <div class="day-header">Sat</div>
             </div>
         </section>
     </main>
