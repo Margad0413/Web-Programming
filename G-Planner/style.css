@@ -1,20 +1,21 @@
 /* ----------------------------------------------------
-   1. 전역 변수 및 테마 시스템 설정 [cite: 37]
+   1. 전역 변수 및 테마 시스템 설정 
 ---------------------------------------------------- */
 :root {
-    --bg-color: #1b2838;       /* 기본 다크모드 딥 네이비 [cite: 50] */
-    --card-bg: #2a475e;        /* 스팀 블루 포인트 카드 [cite: 50] */
+    --bg-color: #1b2838;       /* 기본 다크모드 딥 네이비 */
+    --card-bg: #2a475e;        /* 스팀 블루 포인트 카드  */
     --text-color: #c7d5e0;
-    --point-color: #66c0f4;    /* 스팀 블루 [cite: 50] */
+    --point-color: #66c0f4;    /* 스팀 블루 */
     --border-color: #3b6484;
     --sun-color: #ff6b6b;
     --header-bg: #171a21;
 }
 
-body.light-mode {
-    --bg-color: #f5f6fa;       /* 부드러운 아이보리 화이트 계열 [cite: 51] */
+/* [FOUC 해결] DOM 트리 파싱 전 최상단 바인딩을 위한 html 클래스 스위치 */
+html.light-mode, body.light-mode {
+    --bg-color: #f5f6fa;       /* 부드러운 아이보리 화이트 계열 */
     --card-bg: #ffffff;
-    --text-color: #2c3e50;     /* 다크 그레이 텍스트 [cite: 51] */
+    --text-color: #2c3e50;     /* 다크 그레이 텍스트 */
     --point-color: #0074d9;
     --border-color: #d1d8e0;
     --sun-color: #e74c3c;
@@ -32,12 +33,12 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     line-height: 1.6;
-    /* 다크모드 전환 시 이질감이 없도록 부드러운 애니메이션 효과 가미 [cite: 37, 69] */
+    /* 다크모드 전환 시 이질감이 없도록 부드러운 애니메이션 효과 가미 */
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 /* ----------------------------------------------------
-   2. 레이아웃 구조화 (Header, Nav, Footer) [cite: 62]
+   2. 레이아웃 구조화 (Header, Nav, Footer)
 ---------------------------------------------------- */
 .container {
     max-width: 1200px;
@@ -103,18 +104,33 @@ footer {
 }
 
 /* ----------------------------------------------------
-   3. 메인 스케줄러 레이아웃 (CSS Grid & Flexbox) [cite: 31, 68]
+   3. 메인 스케줄러 레이아웃 (CSS Grid & Flexbox) 
 ---------------------------------------------------- */
 .main-layout {
     display: flex;
-    gap: 3%; /* 고정 px 탈피, % 배분 [cite: 66] */
+    gap: 3%; /* 고정 px 탈피, % 배분 */
 }
 
 .left-panel {
-    flex: 3; /* 좌측 30% 영역 분배 [cite: 55] */
+    flex: 3; /* 좌측 30% 영역 분배 */
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+/* 스팀 브랜드 헤더 행 */
+.steam-brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.steam-brand-logo {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
 }
 
 .profile-widget {
@@ -152,6 +168,7 @@ footer {
 }
 
 .schedule-detail-form input,
+.schedule-detail-form select,
 .schedule-detail-form textarea {
     padding: 8px;
     border-radius: 4px;
@@ -159,9 +176,11 @@ footer {
     background-color: var(--header-bg);
     color: #fff;
     font-size: 12px;
+    width: 100%;
 }
 
 body.light-mode .schedule-detail-form input,
+body.light-mode .schedule-detail-form select,
 body.light-mode .schedule-detail-form textarea {
     background-color: #fff;
     color: #000;
@@ -210,18 +229,20 @@ body.light-mode .schedule-detail-form textarea {
     background-color: #3b6484;
 }
 
-.profile-img-box {
-    width: 100px;
-    height: 100px;
-    background-color: #171a21;
-    color: #fff;
+/* 정사각형 프로필 프레임 명세 적용 파트 */
+.profile-img-box.square-profile {
+    width: 110px;
+    height: 110px;
     margin: 0 auto 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
+    border-radius: 6px; /* 완벽한 정사각형 외곽 유지 */
+    overflow: hidden;
     border: 2px solid var(--point-color);
-    font-size: 13px;
+}
+
+.steam-avatar-src {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 원본 비율 깨짐 방지 크롭 기술 적용 */
 }
 
 .profile-info p { margin-bottom: 8px; }
@@ -229,7 +250,7 @@ body.light-mode .schedule-detail-form textarea {
 .profile-info li { color: var(--point-color); font-weight: bold; }
 
 .calendar-section {
-    flex: 7; /* 우측 70% 영역 분배 [cite: 55] */
+    flex: 7; /* 우측 70% 영역 분배 */
     background-color: var(--card-bg);
     padding: 20px;
     border-radius: 8px;
@@ -253,7 +274,7 @@ body.light-mode .schedule-detail-form textarea {
     font-weight: bold;
 }
 
-/* 가독성이 높은 7열 구조의 월간 달력 화면 구현 [cite: 31] */
+/* 가독성이 높은 7열 구조의 월간 달력 화면 구현 */
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -277,7 +298,7 @@ body.light-mode .schedule-detail-form textarea {
     min-height: 100px;
     padding: 6px;
     display: flex;
-    flex-direction: column; /* 날짜 숫자와 게임 엘리먼트 상하 정렬 [cite: 56] */
+    flex-direction: column; /* 날짜 숫자와 게임 엘리먼트 상하 정렬 */
     justify-content: flex-start;
     align-items: stretch;
     position: relative;
@@ -295,9 +316,8 @@ body.light-mode .schedule-detail-form textarea {
 
 .sun { color: var(--sun-color); }
 
-/* 동적 게임 일정 스티커 스타일 노드  */
+/* 동적 게임 일정 스티커 스타일 노드 */
 .game-tag {
-    background-color: var(--point-color);
     color: #fff;
     font-size: 11px;
     padding: 3px 6px;
@@ -310,7 +330,6 @@ body.light-mode .schedule-detail-form textarea {
     box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
-/* 3주차 추가 요구사항: 일정 삭제 버튼 스타일  */
 .delete-tag-btn {
     background: none;
     border: none;
@@ -320,10 +339,21 @@ body.light-mode .schedule-detail-form textarea {
     margin-left: 4px;
     opacity: 0.7;
 }
-.delete-tag-btn:hover { opacity: 1; color: var(--sun-color); }
+.delete-tag-btn:hover { opacity: 1; color: #fff; text-shadow: 0 0 2px #000; }
+
+/* 동그라미 형태 색상 미리보기 점 */
+.color-preview-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: #66c0f4;
+    border: 1px solid rgba(255,255,255,0.4);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    transition: background-color 0.1s ease;
+}
 
 /* ----------------------------------------------------
-   4. 게임 검색 및 추천 슬롯 페이지 스타일 [cite: 58]
+   4. 게임 검색 및 추천 슬롯 페이지 스타일
 ---------------------------------------------------- */
 .recommend-layout { display: flex; flex-direction: column; gap: 30px; }
 .search-form { display: flex; gap: 10px; }
@@ -350,10 +380,25 @@ body.light-mode .search-form input { background-color: #fff; color: #000; }
     width: 80px; height: 110px; background-color: var(--header-bg);
     border-radius: 4px; display: flex; justify-content: center; align-items: center;
     font-size: 11px; text-align: center; color: #fff; padding: 5px;
+    overflow: hidden;
 }
 
 .game-details { display: flex; flex-direction: column; justify-content: space-between; flex: 1; }
 .meta-score { color: #2ecc71; font-weight: bold; }
+
+/* IGDB 하이퍼링크 텍스트 커스텀 */
+.game-title-link {
+    color: var(--point-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.game-title-link:hover {
+    text-decoration: underline;
+    color: #fff;
+}
+body.light-mode .game-title-link:hover {
+    color: #000;
+}
 
 .add-sched-btn {
     background: none; border: 1px solid var(--point-color); color: var(--point-color);
@@ -365,12 +410,14 @@ body.light-mode .search-form input { background-color: #fff; color: #000; }
 .roll-action { text-align: center; margin-top: 15px; }
 
 /* ----------------------------------------------------
-   5. 입력 폼 양식 스타일 [cite: 59]
+   5. 입력 폼 양식 스타일
 ---------------------------------------------------- */
 .form-section {
     background-color: var(--card-bg); border: 1px solid var(--border-color);
     padding: 30px; border-radius: 8px; max-width: 650px; margin: 0 auto;
 }
+.form-section h2 { margin-bottom: 12px; }
+.form-section label { font-size: 13px; font-weight: bold; }
 .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
 .form-group select, .form-group input, .form-group textarea {
     padding: 10px; border-radius: 4px; border: 1px solid var(--border-color);
@@ -383,7 +430,7 @@ body.light-mode .form-group select, body.light-mode .form-group input, body.ligh
 .form-action { text-align: right; }
 
 /* ----------------------------------------------------
-   6. 모바일 환경 미디어 쿼리 (@media) 최적화 [cite: 38, 67]
+   6. 모바일 환경 미디어 쿼리 (@media) 최적화
 ---------------------------------------------------- */
 @media (max-width: 768px) {
     header { flex-direction: column; gap: 10px; padding: 15px; }
@@ -391,14 +438,76 @@ body.light-mode .form-group select, body.light-mode .form-group input, body.ligh
     .main-layout { flex-direction: column; }
     .left-panel { flex-direction: column; }
     
-    /* 모바일 진입 시 달력 UI가 반응형 리스트 레이아웃 형태로 변환 처리  */
     .calendar-grid { grid-template-columns: 1fr; }
-    .day-header { display: none; } /* 요일 헤더 은닉 */
+    .day-header { display: none; } 
     .calendar-cell { min-height: auto; flex-direction: row; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid var(--border-color); }
-    .calendar-cell.dummy { display: none; } /* 모바일 리스트 뷰에서 다른 달의 공백 칸 제거 */
+    .calendar-cell.dummy { display: none; } 
     .day-num { margin-bottom: 0; font-size: 14px; }
     .day-num::after { content: "일"; }
     .game-tag { width: auto; margin-top: 0; }
     
     .game-card { width: 100%; }
+}
+/* ----------------------------------------------------
+   7. 캘린더 일정 노드 커스텀 툴팁 (Hover 인터페이스)
+---------------------------------------------------- */
+.game-tag-tooltip-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* 마우스를 올렸을 때 data-tooltip의 내용을 기반으로 말풍선 생성 */
+.game-tag[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%; /* 일정 노드 위쪽으로 배치 */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(23, 26, 33, 0.95); /* 스팀 다크 그레이 계열 배경 코드 */
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: normal;
+    white-space: pre-line; /* 줄바꿈(\n) 적용 */
+    width: 160px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+    z-index: 999;
+    pointer-events: none; /* 툴팁이 마우스 포인터를 방해하지 않도록 처리 */
+    animation: fadeInTooltip 0.2s ease;
+}
+
+/* 말풍선 아래쪽에 작은 삼각형 꼬리 추가 */
+.game-tag[data-tooltip]:hover::before {
+    content: "";
+    position: absolute;
+    bottom: 105%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(23, 26, 33, 0.95) transparent transparent transparent;
+    z-index: 999;
+    pointer-events: none;
+}
+
+/* 툴팁이 나타날 때 부드럽게 뜨는 애니메이션 효과 */
+@keyframes fadeInTooltip {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 4px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+/* 모바일 환경에서는 화면 공간상 툴팁 레이어가 겹칠 수 있으므로 숨김 처리 */
+@media (max-width: 768px) {
+    .game-tag[data-tooltip]:hover::after,
+    .game-tag[data-tooltip]:hover::before {
+        display: none !important;
+    }
 }

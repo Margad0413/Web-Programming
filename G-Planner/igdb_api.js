@@ -1,11 +1,4 @@
-/**
- * @file igdb_api.js
- * @brief Twitch OAuth2 프로토콜 기반 런타임 토큰 발급 및 IGDB 외부 통신 API 인터페이스
- * @note 브라우저 CORS 제약 우회를 위해 공개 프록시를 서버 브릿지로 활용
- */
-
-'use strict';
-
+// IGDB API 통신 및 Twitch 인증에 필요한 기본 설정 정보 객체
 const IGDB_CONFIG = {
     CLIENT_ID: "6o7gdg065ca1s6nge9do03fhu9tp4r",
     CLIENT_SECRET: "dpm5rrzb41tked220o1w2yz1hcfaqq",
@@ -14,10 +7,7 @@ const IGDB_CONFIG = {
     cachedToken: ""
 };
 
-/**
- * @brief Twitch 토큰 인증 상태 유효성 검증 및 유기적 자동 갱신 처리
- * @return {Promise<string|null>} 발급 완료된 OAuth2 Bearer 토큰 문자열
- */
+// Twitch 인증 서버로부터 유효한 액세스 토큰을 발급 및 갱신하는 함수
 async function getValidToken() {
     if (IGDB_CONFIG.cachedToken) return IGDB_CONFIG.cachedToken;
 
@@ -37,11 +27,7 @@ async function getValidToken() {
     }
 }
 
-/**
- * @brief 실시간 명세 키워드 텍스트 기반 쿼리 서치
- * @param {string} keyword 인풋 데이터 필터
- * @return {Promise<Array>} 컴파일 파싱 완료된 JSON 데이터 리스트
- */
+// 입력한 키워드를 기반으로 IGDB 데이터베이스에서 해당 게임들을 검색하는 함수
 async function searchGamesFromIGDB(keyword) {
     const token = await getValidToken();
     if (!token) return [];
@@ -73,11 +59,7 @@ async function searchGamesFromIGDB(keyword) {
     }
 }
 
-/**
- * @brief 알고리즘 연동 주 타겟 선호 장르 세그먼트 가치 고평가 리스트 임의 추출
- * @param {string} genreName 쿼리 타겟 장르 명칭
- * @return {Promise<Array>} 슬롯머신에 적재할 3개 카드 배열 리턴
- */
+// 특정 장르의 고평가 게임 리스트를 패치한 뒤 무작위로 3개를 추출하여 슬롯머신에 제공하는 함수
 async function getRecommendedGamesByGenre(genreName) {
     const token = await getValidToken();
     if (!token) return [];
@@ -104,7 +86,6 @@ async function getRecommendedGamesByGenre(genreName) {
         if (!response.ok) throw new Error(`Endpoint Access Refused: ${response.status}`);
         
         const dataset = await response.json();
-        // 셔플 가중치 처리 후 슬롯머신 3종 규격 스위칭 리턴
         return dataset.sort(() => 0.5 - Math.random()).slice(0, 3);
     } catch (error) {
         console.error("[CORS/API Error] Algorithm pipeline stack trace error:", error);

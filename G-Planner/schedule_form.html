@@ -18,7 +18,7 @@
             </ul>
         </nav>
         <div class="theme-toggle">
-            <button id="darkModeBtn">🌙 다크모드 토글</button>
+            <button id="darkModeBtn">🌙 다크모드</button>
         </div>
     </header>
 
@@ -31,15 +31,54 @@
                     <label for="gameSelect">선택된 게임:</label>
                     <select id="gameSelect" required>
                         <option value="">-- 추천 게임 혹은 직접 선택 --</option>
-                        <option value="스타듀밸리">스타듀밸리</option>
-                        <option value="위쳐 3">위쳐 3</option>
-                        <option value="림월드">림월드</option>
+                        <option value="Stardew Valley">Stardew Valley</option>
+                        <option value="The Witcher 3">The Witcher 3</option>
+                        <option value="RimWorld">RimWorld</option>
                         <option value="Don't Starve">Don't Starve</option>
                     </select>
                 </div>
 
+                <div style="display: flex; gap: 15px; margin-bottom: 10px; flex-direction: column;">
+                    <div class="form-group">
+                        <label for="gameIcon">🎨 일정 아이콘 선택:</label>
+                        <select id="gameIcon">
+                            <option value="🎮">🎮 기본</option>
+                            <option value="⚔️">⚔️ RPG / 액션</option>
+                            <option value="🚜">🚜 시뮬레이션 / 빌더</option>
+                            <option value="🚀">🚀 생존 / SF</option>
+                            <option value="🏆">🏆 달성 / 도전과제</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>🌈 테마 색상 선택:</label>
+                        <div class="preset-color-selector" style="display: flex; gap: 10px; margin-top: 6px; justify-content: flex-start;">
+                            <label class="preset-radio-wrapper" style="cursor:pointer;">
+                                <input type="radio" name="presetColor" value="#66c0f4" checked style="display:none;">
+                                <div class="color-preview-dot" style="background-color: #66c0f4; width: 22px; height: 22px; border: 2px solid #fff;"></div>
+                            </label>
+                            <label class="preset-radio-wrapper" style="cursor:pointer;">
+                                <input type="radio" name="presetColor" value="#2ecc71" style="display:none;">
+                                <div class="color-preview-dot" style="background-color: #2ecc71; width: 22px; height: 22px; border: 1px solid rgba(0,0,0,0.4);"></div>
+                            </label>
+                            <label class="preset-radio-wrapper" style="cursor:pointer;">
+                                <input type="radio" name="presetColor" value="#9b59b6" style="display:none;">
+                                <div class="color-preview-dot" style="background-color: #9b59b6; width: 22px; height: 22px; border: 1px solid rgba(0,0,0,0.4);"></div>
+                            </label>
+                            <label class="preset-radio-wrapper" style="cursor:pointer;">
+                                <input type="radio" name="presetColor" value="#e67e22" style="display:none;">
+                                <div class="color-preview-dot" style="background-color: #e67e22; width: 22px; height: 22px; border: 1px solid rgba(0,0,0,0.4);"></div>
+                            </label>
+                            <label class="preset-radio-wrapper" style="cursor:pointer;">
+                                <input type="radio" name="presetColor" value="#e74c3c" style="display:none;">
+                                <div class="color-preview-dot" style="background-color: #e74c3c; width: 22px; height: 22px; border: 1px solid rgba(0,0,0,0.4);"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group inline-group">
-                    <label>목표 플레이 기간:</label>
+                    <label>📅 목표 플레이 기간:</label>
                     <div class="date-inputs">
                         <input type="date" id="startDate" required>
                         <span>~</span>
@@ -48,7 +87,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="targetTime">목표 플레이 타임:</label>
+                    <label for="targetTime">⏱️ 목표 플레이 타임:</label>
                     <div class="time-input-wrapper">
                         <input type="number" id="targetTime" min="1" placeholder="40" required>
                         <span>시간</span>
@@ -56,7 +95,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="memo">메모:</label>
+                    <label for="memo">📝 메모:</label>
                     <textarea id="memo" rows="5" placeholder="플레이 계획이나 메모를 입력하세요."></textarea>
                 </div>
 

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <!-- https://cors-anywhere.herokuapp.com/corsdemo -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>G-Planner - 메인 및 스케줄러</title>
+    <title>G-Planner - 스케줄러</title>
     <link rel="stylesheet" href="style.css">
     <script src="main.js"></script>
+    <script src="igdb_api.js"></script>
 </head>
 <body>
     <header>
@@ -19,17 +19,22 @@
             </ul>
         </nav>
         <div class="theme-toggle">
-            <button id="darkModeBtn">🌙 다크모드 토글</button>
+            <button id="darkModeBtn">🌙 다크모드</button>
         </div>
     </header>
 
     <main class="container main-layout">
         <div class="left-panel">
             <aside class="profile-widget">
-                <h2>[ 스팀 프로필 ]</h2>
-                <div class="profile-img-box">프로필 이미지</div>
+                <div class="steam-brand-row">
+                    <img src="steam_logo.png" alt="Steam Logo" class="steam-brand-logo">
+                    <h2>Steam Profile</h2>
+                </div>
+                <div class="profile-img-box square-profile">
+                    <img src="steam_profile.jpg" alt="Steam Profile Picture" class="steam-avatar-src">
+                </div>
                 <div class="profile-info">
-                    <p><strong>닉네임:</strong> 마르가드</p>
+                    <p><strong>닉네임:</strong> Luminous</p>
                     <p><strong>보유게임:</strong> 142개</p>
                     <p><strong>주 장르 선호도:</strong></p>
                     <ul>
@@ -40,13 +45,88 @@
             </aside>
 
             <div class="schedule-detail-panel" id="scheduleDetailPanel">
-                <p style="text-align: center; color: var(--border-color); padding: 20px;">캘린더에서 게임을 선택하면<br>상세 정보가 표시됩니다</p>
+                <div id="detailPlaceholder">
+                    <p style="text-align: center; color: var(--border-color); padding: 20px; font-size: 13px;">
+                        캘린더에서 게임을 선택하면<br>상세 정보가 표시됩니다
+                    </p>
+                </div>
+
+                <div id="detailContent" class="detail-container-box" style="display: none;">
+                    <div class="detail-media-header" style="display: flex; gap: 12px; margin-bottom: 12px;">
+                        <div class="detail-cover-wrapper" style="width: 70px; height: 95px; flex-shrink: 0; border-radius: 4px; overflow: hidden; background-color: var(--header-bg); border: 1px solid var(--border-color);">
+                            <img id="panelCoverImg" src="" alt="Game Cover" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="detail-title-meta" style="flex: 1;">
+                            <h3 id="panelTitle" style="color: var(--point-color); font-size: 16px; word-break: break-all;"></h3>
+                            <p id="panelPeriod" style="font-size: 14px; color: var(--text-color); margin-top: 4px;"></p>
+                            <p id="panelDaysCount" style="font-size: 12px; color: var(--text-color);"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="schedule-detail-form">
+                        <div style="display: flex; gap: 10px; margin-bottom: 4px; flex-direction: column;">
+                            <div class="form-group">
+                                <label for="detail-icon">🎨 일정 아이콘 변경:</label>
+                                <select id="detail-icon" style="width: 100%; padding: 6px;">
+                                    <option value="🎮">🎮 기본 </option>
+                                    <option value="⚔️">⚔️ RPG / 액션</option>
+                                    <option value="🚜">🚜 시뮬레이션 / 빌더</option>
+                                    <option value="🚀">🚀 생존 / SF</option>
+                                    <option value="🏆">🏆 달성 / 도전과제</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>🌈 테마 색상 변경:</label>
+                                <div class="preset-color-selector" id="detailPresetGroup" style="display: flex; gap: 10px; margin-top: 6px; justify-content: flex-start;">
+                                    <label class="preset-radio-wrapper" style="cursor:pointer;">
+                                        <input type="radio" name="detailPresetColor" value="#66c0f4" style="display:none;">
+                                        <div class="color-preview-dot" style="background-color: #66c0f4; width: 22px; height: 22px;"></div>
+                                    </label>
+                                    <label class="preset-radio-wrapper" style="cursor:pointer;">
+                                        <input type="radio" name="detailPresetColor" value="#2ecc71" style="display:none;">
+                                        <div class="color-preview-dot" style="background-color: #2ecc71; width: 22px; height: 22px;"></div>
+                                    </label>
+                                    <label class="preset-radio-wrapper" style="cursor:pointer;">
+                                        <input type="radio" name="detailPresetColor" value="#9b59b6" style="display:none;">
+                                        <div class="color-preview-dot" style="background-color: #9b59b6; width: 22px; height: 22px;"></div>
+                                    </label>
+                                    <label class="preset-radio-wrapper" style="cursor:pointer;">
+                                        <input type="radio" name="detailPresetColor" value="#e67e22" style="display:none;">
+                                        <div class="color-preview-dot" style="background-color: #e67e22; width: 22px; height: 22px;"></div>
+                                    </label>
+                                    <label class="preset-radio-wrapper" style="cursor:pointer;">
+                                        <input type="radio" name="detailPresetColor" value="#e74c3c" style="display:none;">
+                                        <div class="color-preview-dot" style="background-color: #e74c3c; width: 22px; height: 22px;"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="detail-targetTime">⏱️ 목표 플레이 타임:</label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <input type="number" id="detail-targetTime" min="1" style="flex: 1; padding: 6px;">
+                                <span style="font-size: 12px;">시간</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="detail-memo">📝 메모 관리:</label>
+                            <textarea id="detail-memo" rows="3" style="padding: 6px;"></textarea>
+                        </div>
+                        <div class="detail-buttons">
+                            <button type="button" class="detail-btn detail-save-btn" id="detailSaveBtn">💾 저장</button>
+                            <button type="button" class="detail-btn detail-delete-btn" id="detailDeleteBtn">🗑️ 삭제</button>
+                            <button type="button" class="detail-btn detail-cancel-btn" id="detailCancelBtn">✕ 닫기</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <section class="calendar-section">
             <div class="calendar-header">
-                <h3 id="calendarTitle">2026년 5월</h3>
+                <h3 id="calendarTitle">2026년 6월</h3>
                 <div class="calendar-nav">
                     <button id="prevMonthBtn">&lt;</button>
                     <button id="nextMonthBtn">&gt;</button>
