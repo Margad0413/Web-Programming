@@ -417,6 +417,12 @@ function createGameCardNode(game) {
     }
         
     const score = game.aggregated_rating ? Math.round(game.aggregated_rating) : "N/A";
+    
+    let releaseDate = "미정";
+    if (game.first_release_date) {
+        const dateObj = new Date(game.first_release_date * 1000);
+        releaseDate = dateObj.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' });
+    }
 
     const slugifiedName = game.name.toLowerCase()
         .replace(/[^a-z0-9\s-]/g, '')
@@ -429,12 +435,12 @@ function createGameCardNode(game) {
         <div class="game-details">
             <h4><a href="${igdbDetailsUrl}" target="_blank" class="game-title-link" title="자세한 정보 보러가기">${game.name}</a></h4>
             <p class="meta-score">메타스코어: ${score}</p>
+            <p class="release-date">📅 출시일: ${releaseDate}</p>
             <button class="add-sched-btn">[일정에 추가]</button>
         </div>
     `;
     return card;
 }
-
 /* ==========================================================================
    [등록 폼] 인풋 양식 입력값 검증 및 가상 폼 전송 핸들링
    ========================================================================== */

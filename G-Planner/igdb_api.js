@@ -34,7 +34,7 @@ async function searchGamesFromIGDB(keyword) {
 
     const endpoint = `${IGDB_CONFIG.PROXY_PREFIX}${IGDB_CONFIG.API_BASE_URL}/games`;
     const apicalypseQuery = `
-        fields name, cover.url, first_release_date, aggregated_rating, genres.name;
+        fields name, cover.url, first_release_date, aggregated_rating, first_release_date, genres.name;
         search "${keyword}";
         limit 9;
     `;
@@ -66,7 +66,7 @@ async function getRecommendedGamesByGenre(genreName) {
 
     const endpoint = `${IGDB_CONFIG.PROXY_PREFIX}${IGDB_CONFIG.API_BASE_URL}/games`;
     const apicalypseQuery = `
-        fields name, cover.url, aggregated_rating;
+        fields name, cover.url, aggregated_rating, first_release_date;
         where genres.name = "${genreName}" & aggregated_rating != null;
         sort aggregated_rating desc;
         limit 20;
